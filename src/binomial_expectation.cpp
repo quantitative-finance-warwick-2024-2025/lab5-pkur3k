@@ -2,29 +2,30 @@
 #include <vector>
 
 double binomial_expectation_loop(double *spread, double p, unsigned int n) {
-    std::vector<double> arr(n + 1, 0.0);
+    std::vector<double> arr(n + 1);
 
     // set up the base nodes
-    for (unsigned int i = 0; i < n + 1; ++i) {
+    for (unsigned int i = 0; i < n + 1; ++i)
         arr[i] = spread[i];
-    }
+
     // loop through each depth
-    for (unsigned int i = (int)n - 1; i >= 0; --i) {
+    for (int i = (int)n - 1; i >= 0; --i)
         // loop through each node at depth i
-        for (unsigned int j = 0; j < (unsigned int) + 1; --j){
-            arr[j] = (1.0 - p) * arr[j] + p * arr[j + 1]; 
-        }
-    }
-    
+        for (unsigned int j = 0; j < (unsigned int)i + 1; ++j)
+            arr[j] = (1.0 - p) * arr[j] + p * arr[j + 1];
+
     double answer = arr[0];
     return answer;
 }
 
-double binomial_expectation_recursion_h(unsigned int i, unsigned int j, double *spread, double p, unsigned int n) {
-    if (i == n) {
+double binomial_expectation_recursion_h(
+    unsigned int i, unsigned int j, double *spread, double p, unsigned int n) {
+    if (i == n)
         return spread[j];
-    }
-    return (1.0 - p) * binomial_expectation_recursion_h(i + 1, j, spread, p, n) + p * binomial_expectation_recursion_h(i + 1, j + 1, spread, p, n);
+
+    // if (i < n)
+    return (1.0 - p) * binomial_expectation_recursion_h(i + 1, j, spread, p, n)
+           + p * binomial_expectation_recursion_h(i + 1, j + 1, spread, p, n);
 }
 
 double binomial_expectation_recursion(double *spread, double p, unsigned int n) {
@@ -70,7 +71,7 @@ void expected_returns(double S0,
     double u = std::exp(volatility * std::sqrt(delta_t));
     double d = 1.0 / u;
 
-    for (size_t i = 0; i < spread_points; ++i){
+    for (size_t i = 0; i < spread_points; ++i) {
         out_spread[i] = d + (u - d) * i / (spread_points - 1);
         out_risk_neutral_rate[i] = std::log(out_spread[i]) / delta_t;
         out_probability[i] = (out_spread[i] - d) / (u - d);
