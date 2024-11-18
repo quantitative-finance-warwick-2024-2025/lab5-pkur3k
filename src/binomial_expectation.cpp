@@ -15,6 +15,7 @@ double binomial_expectation_loop(double *spread, double p, unsigned int n) {
             arr[j] = (1.0 - p) * arr[j] + p * arr[j + 1];
 
     double answer = arr[0];
+    
     return answer;
 }
 
